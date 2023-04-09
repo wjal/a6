@@ -19,23 +19,24 @@ export default function ArtworkCardDetail(prop) {
   const { data, error } = useSWR(prop.objectID ? `https://collectionapi.metmuseum.org/public/collection/v1/objects/${prop.objectID}` : null)
 
   useEffect(()=>{
-    setShowAdded(favouritesList?.includes(prop))
+    setShowAdded(favouritesList?.includes(prop.objectID))
   }, [favouritesList])
 
   //for favourites button onClick.  if show is present in favouritesList showAdded is true, and on click it is removed from the current fav list
   //and setShowAdded is set to false.  if not present, then click adds it to favs, and setShowAdded set to true.
   async function favouritesClicked(){
-    if(showAdded === true){
-      setFavouritesList(await removeFromFavourites(prop)) 
+    if(showAdded){
+      setFavouritesList(await removeFromFavourites(prop.objectID)) 
       setShowAdded(false)
-    }if(showAdded === false){
-      setFavouritesList(await addToFavourites(prop))
+    }if(!showAdded){
+      setFavouritesList(await addToFavourites(prop.objectID))
       setShowAdded(true)
     }
   }
   if(error){
     return <Error statusCode={404} /> 
   }
+  
 
   if (data) {
     return (<>
